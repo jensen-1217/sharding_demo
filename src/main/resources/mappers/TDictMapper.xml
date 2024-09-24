@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.sharding.mapper.TDictMapper">
+
+    <resultMap id="BaseResultMap" type="com.itheima.sharding.entity.TDict">
+            <id property="dictId" column="dict_id" jdbcType="BIGINT"/>
+            <result property="type" column="type" jdbcType="VARCHAR"/>
+            <result property="code" column="code" jdbcType="VARCHAR"/>
+            <result property="value" column="value" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        dict_id,type,code,
+        value
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_dict
+        where  dict_id = #{dictId,jdbcType=BIGINT} 
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from t_dict
+        where  dict_id = #{dictId,jdbcType=BIGINT} 
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.itheima.sharding.entity.TDict" useGeneratedKeys="true">
+        insert into t_dict
+        ( dict_id,type,code
+        ,value)
+        values (#{dictId,jdbcType=BIGINT},#{type,jdbcType=VARCHAR},#{code,jdbcType=VARCHAR}
+        ,#{value,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.itheima.sharding.entity.TDict" useGeneratedKeys="true">
+        insert into t_dict
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="dictId != null">dictId,</if>
+                <if test="type != null">type,</if>
+                <if test="code != null">code,</if>
+                <if test="value != null">value,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="dictId != null">dict_id = #{dictId,jdbcType=BIGINT},</if>
+                <if test="type != null">type = #{type,jdbcType=VARCHAR},</if>
+                <if test="code != null">code = #{code,jdbcType=VARCHAR},</if>
+                <if test="value != null">value = #{value,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.itheima.sharding.entity.TDict">
+        update t_dict
+        <set>
+                <if test="type != null">
+                    type = #{type,jdbcType=VARCHAR},
+                </if>
+                <if test="code != null">
+                    code = #{code,jdbcType=VARCHAR},
+                </if>
+                <if test="value != null">
+                    value = #{value,jdbcType=VARCHAR},
+                </if>
+        </set>
+        where   dict_id = #{dictId,jdbcType=BIGINT} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.itheima.sharding.entity.TDict">
+        update t_dict
+        set 
+            type =  #{type,jdbcType=VARCHAR},
+            code =  #{code,jdbcType=VARCHAR},
+            value =  #{value,jdbcType=VARCHAR}
+        where   dict_id = #{dictId,jdbcType=BIGINT} 
+    </update>
+</mapper>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.sharding.mapper.TUserMapper">
+
+    <resultMap id="BaseResultMap" type="com.itheima.sharding.entity.TUser">
+            <id property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="fullname" column="fullname" jdbcType="VARCHAR"/>
+            <result property="userType" column="user_type" jdbcType="CHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        user_id,fullname,user_type
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_user
+        where  user_id = #{userId,jdbcType=BIGINT} 
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from t_user
+        where  user_id = #{userId,jdbcType=BIGINT} 
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.itheima.sharding.entity.TUser" useGeneratedKeys="true">
+        insert into t_user
+        ( user_id,fullname,user_type
+        )
+        values (#{userId,jdbcType=BIGINT},#{fullname,jdbcType=VARCHAR},#{userType,jdbcType=CHAR}
+        )
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.itheima.sharding.entity.TUser" useGeneratedKeys="true">
+        insert into t_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="userId != null">userId,</if>
+                <if test="fullname != null">fullname,</if>
+                <if test="userType != null">userType,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="userId != null">user_id = #{userId,jdbcType=BIGINT},</if>
+                <if test="fullname != null">fullname = #{fullname,jdbcType=VARCHAR},</if>
+                <if test="userType != null">user_type = #{userType,jdbcType=CHAR},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.itheima.sharding.entity.TUser">
+        update t_user
+        <set>
+                <if test="fullname != null">
+                    fullname = #{fullname,jdbcType=VARCHAR},
+                </if>
+                <if test="userType != null">
+                    user_type = #{userType,jdbcType=CHAR},
+                </if>
+        </set>
+        where   user_id = #{userId,jdbcType=BIGINT} 
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.itheima.sharding.entity.TUser">
+        update t_user
+        set 
+            fullname =  #{fullname,jdbcType=VARCHAR},
+            user_type =  #{userType,jdbcType=CHAR}
+        where   user_id = #{userId,jdbcType=BIGINT} 
+    </update>
+</mapper>

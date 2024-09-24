@@ -1,0 +1,47 @@
+spring:
+    shardingsphere:
+        datasource:
+            names: ds1,ds2,udb,def
+            def:
+                driver-class-name: com.mysql.cj.jdbc.Driver
+                password: root
+                type: com.alibaba.druid.pool.DruidDataSource
+                url: jdbc:mysql://localhost:3306/default_db?serverTimezone=GMT%2B8
+                username: root
+            ds1:
+                driver-class-name: com.mysql.cj.jdbc.Driver
+                password: root
+                type: com.alibaba.druid.pool.DruidDataSource
+                url: jdbc:mysql://localhost:3306/order_db_1?serverTimezone=GMT%2B8
+                username: root
+            ds2:
+                driver-class-name: com.mysql.cj.jdbc.Driver
+                password: root
+                type: com.alibaba.druid.pool.DruidDataSource
+                url: jdbc:mysql://localhost:3306/order_db_2?serverTimezone=GMT%2B8
+                username: root
+            udb:
+                driver-class-name: com.mysql.cj.jdbc.Driver
+                password: root
+                type: com.alibaba.druid.pool.DruidDataSource
+                url: jdbc:mysql://localhost:3306/user_db?serverTimezone=GMT%2B8
+                username: root
+        props:
+            sql:
+                show: true
+        sharding:
+            broadcast-tables: t_dict
+            default-data-source-name: def
+            tables:
+                t_order:
+                    actual-data-nodes: ds${1..2}.t_order_${1..2}
+                    database-strategy:
+                        inline:
+                            algorithm-expression: ds${user_id % 2 +1}
+                            sharding-column: user_id
+                    table-strategy:
+                        inline:
+                            algorithm-expression: t_order_${order_id % 2 +1}
+                            sharding-column: order_id
+                t_user:
+                    actual-data-nodes: udb.t_user

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.sharding.mapper.TOrderMapper">
+
+    <resultMap id="BaseResultMap" type="com.itheima.sharding.entity.TOrder">
+            <id property="orderId" column="order_id" jdbcType="BIGINT"/>
+            <result property="price" column="price" jdbcType="DECIMAL"/>
+            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="status" column="status" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        order_id,price,user_id,
+        status
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_order
+        where  order_id = #{orderId,jdbcType=BIGINT}
+    </select>
+    <select id="findByUserId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_order
+        where  user_id = #{userId,jdbcType=BIGINT}
+    </select>
+    <select id="findRangeByUserId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_order
+        where  user_id between #{start} and #{end}
+    </select>
+    <select id="selectByRange" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_order
+        where  order_id between #{start} and #{end}
+    </select>
+    <select id="selectByRange2" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_order
+        where  order_id between #{start} and #{end} and user_id=#{userId}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from t_order
+        where  order_id = #{orderId,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.itheima.sharding.entity.TOrder" useGeneratedKeys="true">
+        insert into t_order
+        ( order_id,price,user_id
+        ,status)
+        values (#{orderId,jdbcType=BIGINT},#{price,jdbcType=DECIMAL},#{userId,jdbcType=BIGINT}
+        ,#{status,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.itheima.sharding.entity.TOrder" useGeneratedKeys="true">
+        insert into t_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="orderId != null">orderId,</if>
+                <if test="price != null">price,</if>
+                <if test="userId != null">userId,</if>
+                <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="orderId != null">order_id = #{orderId,jdbcType=BIGINT},</if>
+                <if test="price != null">price = #{price,jdbcType=DECIMAL},</if>
+                <if test="userId != null">user_id = #{userId,jdbcType=BIGINT},</if>
+                <if test="status != null">status = #{status,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.itheima.sharding.entity.TOrder">
+        update t_order
+        <set>
+                <if test="price != null">
+                    price = #{price,jdbcType=DECIMAL},
+                </if>
+                <if test="userId != null">
+                    user_id = #{userId,jdbcType=BIGINT},
+                </if>
+                <if test="status != null">
+                    status = #{status,jdbcType=VARCHAR},
+                </if>
+        </set>
+        where   order_id = #{orderId,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.itheima.sharding.entity.TOrder">
+        update t_order
+        set
+            price =  #{price,jdbcType=DECIMAL},
+            user_id =  #{userId,jdbcType=BIGINT},
+            status =  #{status,jdbcType=VARCHAR}
+        where   order_id = #{orderId,jdbcType=BIGINT}
+    </update>
+</mapper>
